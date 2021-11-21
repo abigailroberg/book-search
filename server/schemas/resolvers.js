@@ -44,8 +44,8 @@ const resolvers = {
                 const book = await Book.create({ ...args, username: context.user.username })
 
                 const user = await User.findOneAndUpdate(
-                    { _id: context.iser._id },
-                    { $push: { savedBooks: book.bookId }},
+                    { _id: context.user._id },
+                    { $push: { savedBooks: book.bookId } },
                     { new: true }
                 )
 
@@ -53,6 +53,20 @@ const resolvers = {
             }
 
             throw new AuthenticationError('You need to be logged in to save a book!')
+        },
+
+        removeBook: async (parent, { bookId }, context) => {
+            if(context.user) {
+                const user = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { savedBooks: {bookId: bookId } } },
+                    { new: true }
+                )
+
+                return user
+            }
+
+            throw new AuthenticationError('You need to be logged in!')
         }
     }
 }
