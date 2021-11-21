@@ -4,10 +4,13 @@ const resolvers = {
     Query: {
         me: async (parent, args, context) => {
             if(context.user) {
-                const foundUser = await User.findOne({
-                    $or: [{ _id: user ? user._id : params.id }, { username: params.username }],
-                  })
+                const userData = await User.findOne({ _id: context.user.__id })
+                    .select('-__v -password')
+                    .populate('savedBooks')
+                    return userData
             }
         }
     }
 }
+
+module.exports = resolvers
