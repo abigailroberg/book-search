@@ -37,6 +37,22 @@ const resolvers = {
             const token = signToken(user)
 
             return { token, user }
+        },
+
+        saveBook: async (parent, args, context) => {
+            if(context.user) {
+                const book = await Book.create({ ...args, username: context.user.username })
+
+                const user = await User.findOneAndUpdate(
+                    { _id: context.iser._id },
+                    { $push: { savedBooks: book.bookId }},
+                    { new: true }
+                )
+
+                return user
+            }
+
+            throw new AuthenticationError('You need to be logged in to save a book!')
         }
     }
 }
