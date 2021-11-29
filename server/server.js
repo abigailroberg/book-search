@@ -12,7 +12,7 @@ const db = require('./config/connection');
 // const routes = require('./routes');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3006;
 
 const startServer = async () => {
   // create new Apollo server; pass in schemas
